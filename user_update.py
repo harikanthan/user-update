@@ -34,23 +34,29 @@ if __name__ == '__main__':
     conn = umapi_client.Connection(org_id=config["org_id"],
                                    auth_dict=config,
                                    test_mode=args.test_mode,
+                                   # ims_host='ims-na1-stg1.adobelogin.com',
+                                   ims_endpoint_jwt='/ims/exchange/jwt',
+                                   # user_management_endpoint='https://usermanagement-stage.adobe.io/v2/usermanagement',
                                    logger=logger)
 
-    cols = ['Username', 'Email']
+    cols = ['Username', 'Email', 'New Email']
 
     actions = {}
     for user_rec in CSVAdapter.read_csv_rows(args.users_filename, recognized_column_names=cols):
-        username, email = user_rec.get('Username'), user_rec.get('Email')
+        username, email, new_email, domain = \
+            user_rec.get('Username'), user_rec.get('Email'), user_rec.get('New Email'), user_rec.get('Domain')
         if not username or not email:
             logger.warning("Skipping input record with missing Username and/or Email: %s" % user_rec)
             continue
-        user = UserAction(id_type=IdentityTypes.federatedID, email=email)
-        if args.from_email:
-            user.update(username=username)
-            actions[email] = user
-        else:
-            user.update(username=email)
-            actions[username] = user
+        user = UserAction(id_type=IdentityTypes.federatedID, email=username, domain=domain)
+        user.update(email=new_email)
+        actions[email] = user
+        # if args.from_email:
+        #     user.update(username=username)
+        #     actions[email] = user
+        # else:
+        #     user.update(username=email)
+        #     actions[username] = user
         conn.execute_single(user)
 
     conn.execute_queued()
