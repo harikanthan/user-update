@@ -39,25 +39,28 @@ if __name__ == '__main__':
                                    # user_management_endpoint='https://usermanagement-stage.adobe.io/v2/usermanagement',
                                    logger=logger)
 
-    cols = ['Username', 'Email', 'New Email']
+    cols = ['Username', 'Email', 'New Email', 'New Username']
 
     actions = {}
     for user_rec in CSVAdapter.read_csv_rows(args.users_filename, recognized_column_names=cols):
-        username, email, new_email, domain = \
-            user_rec.get('Username'), user_rec.get('Email'), user_rec.get('New Email'), user_rec.get('Domain')
+        username, email, new_email, new_username, domain = \
+            user_rec.get('Username'), user_rec.get('Email'), user_rec.get('New Email'),user_rec.get('New Username'), user_rec.get('Domain')
         if not username or not email:
             logger.warning("Skipping input record with missing Username and/or Email: %s" % user_rec)
             continue
-        user = UserAction(id_type=IdentityTypes.federatedID, email=username, domain=domain)
-        user.update(email=new_email)
-        actions[email] = user
-        # if args.from_email:
-        #     user.update(username=username)
-        #     actions[email] = user
-        # else:
-        #     user.update(username=email)
-        #     actions[username] = user
-        conn.execute_single(user)
+        try:
+            user = UserAction(id_type=IdentityTypes.federatedID, email=username)
+            user.update(email=new_email, username=new_username)
+            actions[email] = user
+            # if args.from_email:
+            #     user.update(username=username)
+            #     actions[email] = user
+            # else:
+            #     user.update(username=email)
+            #     actions[username] = user
+            conn.execute_single(user)
+        except Exception as e:
+            logger.error("Error with: " + username + " ||| " + 'New Email: ' + new_email)
 
     conn.execute_queued()
 
