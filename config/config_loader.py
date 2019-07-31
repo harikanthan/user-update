@@ -16,6 +16,8 @@ class ConfigLoader:
         user_configuration = user_config.UserConfig.get_configuration()
         user_props = config["configuration"]
         user_configuration.id_type = user_props["id_type"]
+        if  user_configuration.id_type is None:
+            user_configuration.id_type = "Federated ID"
         user_configuration.logon_type = user_props["logon_type"]
         user_configuration.username_file = user_props["username_file"]
         if users_filename is not None:
