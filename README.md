@@ -1,7 +1,7 @@
 # user-update
 Run user_update.py with below options to update the User Profile details in admin console. Email Id or User id of the user is used to update Email, Username, first name , last name and country
 
-###Options
+### Options
 
 | Command  | Description  | Required | Default |
 | ------------- | ------------- | ------------- | ------------- |
@@ -10,7 +10,7 @@ Run user_update.py with below options to update the User Profile details in admi
 | -u, --users-filename   | relative path to user csv  | yes |  none  |
 | -t, --test-mode    | test mode  | no |  false  |
 
-###Files Required
+### Files Required
 
 1) xxxx-config.yml
 
