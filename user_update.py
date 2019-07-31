@@ -1,48 +1,47 @@
-import argparse
-import yaml
-import umapi_client
+import click
 import logging
+from click_default_group import DefaultGroup
+import yaml
+import atexit
+import umapi_client
+import log_handler, umapi_connection
 from umapi_client import IdentityTypes, UserAction
 from util import CSVAdapter
+import config.config_loader as config_loader
 
-if __name__ == '__main__':
-    logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
-    parser = argparse.ArgumentParser(description='Username Update Tool')
-    parser.add_argument('-c', '--config',
-                        help='filename of config file',
-                        metavar='filename', dest='config_filename')
-    parser.add_argument('-u', '--users',
-                        help='filename of user file',
-                        metavar='filename', dest='users_filename')
-    parser.add_argument('-t', '--test-mode',
-                        help='run updates in test mode',
-                        dest='test_mode',
-                        action='store_true',
-                        default=False)
-    parser.add_argument('-r', '--reverse',
-                        help='reverse conversion (go from username to email, rather than email to username)',
-                        dest='from_email',
-                        action='store_false',
-                        default=True)
+logHandler=None
 
-    args = parser.parse_args()
+@click.group(cls=DefaultGroup, default='update', default_if_no_args=True)
+@click.version_option('1.2', '-v', '--version', message='%(prog)s %(version)s')
+def main():
+    pass
 
-    with open(args.config_filename, "r") as f:
-        config = yaml.load(f)
-    conn = umapi_client.Connection(org_id=config["org_id"],
-                                   auth_dict=config,
-                                   test_mode=args.test_mode,
-                                   # ims_host='ims-na1-stg1.adobelogin.com',
-                                   ims_endpoint_jwt='/ims/exchange/jwt',
-                                   # user_management_endpoint='https://usermanagement-stage.adobe.io/v2/usermanagement',
-                                   logger=logger)
+@main.command()
+@click.help_option('-h', '--help')
+@click.option('-c', '--config_filename',
+              help="path to your main config file",
+              type=str,
+              nargs=1,
+              metavar='path-to-file')
+@click.option('-u', '--users_filename',
+              help="filename of user file",
+              type=str,
+              nargs=1,
+              metavar='path-to-file')
+@click.option('-t', '--test-mode', default=False, is_flag=True,
+              help='enable test mode (API calls do not execute changes on the Adobe side).')
+def update(**kwargs):
+
+    umapi, config = config_loader.ConfigLoader().load_config(**kwargs)
+
+    logger = log_handler.getLogger()
+
+    conn = umapi_connection.UmapiConnection().get_connection(logger, umapi, config)
 
     cols = ['Username', 'Email', 'New Email', 'New Username']
 
     actions = {}
-    for user_rec in CSVAdapter.read_csv_rows(args.users_filename, recognized_column_names=cols):
+    for user_rec in CSVAdapter.read_csv_rows(config.users_filename, recognized_column_names=cols):
         username, email, new_email, new_username, domain = \
             user_rec.get('Username'), user_rec.get('Email'), user_rec.get('New Email'),user_rec.get('New Username'), user_rec.get('Domain')
         if not username or not email:
@@ -52,7 +51,7 @@ if __name__ == '__main__':
             user = UserAction(id_type=IdentityTypes.federatedID, email=username)
             user.update(email=new_email, username=new_username)
             actions[email] = user
-            # if args.from_email:
+            # if kwargs["from_email"]
             #     user.update(username=username)
             #     actions[email] = user
             # else:
@@ -72,3 +71,6 @@ if __name__ == '__main__':
             failures += 1
             logger.error("Conversion of %s failed: %s" % (key, action.execution_errors()))
     logger.info("Conversions attempted/succeeded/failed: %d/%d/%d" % (len(actions), successes, failures))
+
+if __name__ == '__main__':
+    main()
