@@ -21,8 +21,6 @@ umapi:
   api_key: '{API Key (Client ID) from Adobe I/O Console}'
   client_secret: '{Client secret from Adobe I/O Console}'
   private_key_file: 'private.key file'
-  #host: "https://usermanagement.adobe.io/v2/usermanagement"
-  #ims-host: "ims-na1.adobelogin.com"
 configuration:
   id_type: {id Type}
   logon_type: {logon type email/user id}
