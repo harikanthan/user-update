@@ -9,7 +9,8 @@ class ConfigLoader:
         with open(kwargs["config_filename"], "r") as f:
             config = yaml.load(f)
         umapi = self.get_umapi_config(config)
-        user_configuration = self.get_user_config(config, kwargs["users_filename"])
+        users_filename = None if "users_filename" not in  kwargs else kwargs["users_filename"]
+        user_configuration = self.get_user_config(config, users_filename)
         return umapi, user_configuration
 
     def get_user_config(self, config, users_filename):
@@ -19,7 +20,8 @@ class ConfigLoader:
         if  user_configuration.id_type is None:
             user_configuration.id_type = "Federated ID"
         user_configuration.logon_type = user_props["logon_type"]
-        user_configuration.username_file = user_props["username_file"]
+        user_configuration.users_filename = user_props["username_file"]
+        #override with kwargs parameter if present
         if users_filename is not None:
             user_configuration.users_filename = users_filename
         return user_configuration
