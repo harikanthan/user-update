@@ -1,13 +1,21 @@
 from PySide2 import QtCore, QtGui, QtWidgets
 from ui.ui_main_window_base import Ui_MainWindowBase
 import config.config_loader as config_loader
-
+from PySide2.QtWidgets import QFileDialog
+from PySide2.QtCore import QObject
+import sys
 
 class Ui_MainWindow(Ui_MainWindowBase):
 
     def updateWindowConfig(self):
         self.setDefaultValues()
         self.save.clicked.connect(self.__save)
+        self.privateKeyPath.clicked.connect(lambda:self.__setFilePath(self.private_key_file))
+        self.userListFilePath.clicked.connect(lambda:self.__setFilePath(self.users_filename))
+
+    def __setFilePath(self, field: QtWidgets.QLineEdit):
+        path_to_file, _ = QFileDialog.getOpenFileName(None,"Load File Path",None,"*.*",None)
+        field.setText(path_to_file)
 
     def __save(self):
         print(self.id_type.text())
@@ -27,7 +35,6 @@ class Ui_MainWindow(Ui_MainWindowBase):
 
 
 if __name__ == "__main__":
-    import sys
 
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
