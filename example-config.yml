@@ -1,5 +1,13 @@
-org_id: 'ORG_ID'
-tech_acct_id: 'TECH_ACCT_ID'
-api_key: 'API_KEY'
-client_secret: 'CLIENT_SECRET'
-private_key_file: 'PATH_TO_PRIVATE_KEY'
+umapi:
+  org_id: 'ORG_ID'
+  tech_acct_id:  'TECH_ACCT_ID'
+  api_key: 'API_KEY'
+  client_secret: 'CLIENT_SECRET'
+  private_key_file: 'PATH_TO_PRIVATE_KEY'
+  #host: "USER_MANAGEMENT_URL"
+  #ims_host: "IMS_HOST"
+#NEWLY ADDED
+configuration:
+  id_type: 'ID_TYPE'
+  logon_type: 'LOGON_TYPE'
+  username_file: 'PATH_TO_USER_NAME_FILE'
