@@ -6,12 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>681</width>
-    <height>561</height>
+    <width>570</width>
+    <height>586</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Admin Console User Update Tool</string>
+  </property>
+  <property name="windowOpacity">
+   <double>4.000000000000000</double>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="tabWidget">
@@ -19,8 +22,8 @@
      <rect>
       <x>0</x>
       <y>10</y>
-      <width>681</width>
-      <height>511</height>
+      <width>561</width>
+      <height>541</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -30,22 +33,68 @@
      </sizepolicy>
     </property>
     <property name="tabShape">
-     <enum>QTabWidget::Triangular</enum>
+     <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
      <number>0</number>
     </property>
+    <property name="iconSize">
+     <size>
+      <width>16</width>
+      <height>16</height>
+     </size>
+    </property>
     <property name="elideMode">
-     <enum>Qt::ElideLeft</enum>
+     <enum>Qt::ElideNone</enum>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
       <string>Configuration</string>
      </attribute>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>106</y>
+        <width>541</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string> UMAPI Configurations</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>350</y>
+        <width>541</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string> User Configurations</string>
+      </property>
+     </widget>
      <widget class="QPushButton" name="save">
       <property name="geometry">
        <rect>
-        <x>500</x>
+        <x>460</x>
         <y>460</y>
         <width>75</width>
         <height>23</height>
@@ -58,8 +107,224 @@
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>60</x>
-        <y>50</y>
+        <x>20</x>
+        <y>140</y>
+        <width>511</width>
+        <height>192</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QLabel" name="organizationIDLabel">
+           <property name="text">
+            <string>Organization ID</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="0" column="1">
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QLineEdit" name="org_id"/>
+         </item>
+        </layout>
+       </item>
+       <item row="0" column="2">
+        <layout class="QVBoxLayout" name="verticalLayout_3"/>
+       </item>
+       <item row="1" column="0">
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QLabel" name="technicalAccountIDLabel">
+           <property name="text">
+            <string>Technical account ID</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="1">
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <item>
+          <widget class="QLineEdit" name="tech_acct_id"/>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="2">
+        <layout class="QVBoxLayout" name="verticalLayout_6"/>
+       </item>
+       <item row="2" column="0">
+        <layout class="QVBoxLayout" name="verticalLayout_25">
+         <item>
+          <widget class="QLabel" name="aPIKeyClientIDLabel">
+           <property name="text">
+            <string>API Key (Client ID)</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="2" column="1">
+        <layout class="QVBoxLayout" name="verticalLayout_26">
+         <item>
+          <widget class="QLineEdit" name="api_key"/>
+         </item>
+        </layout>
+       </item>
+       <item row="2" column="2">
+        <layout class="QVBoxLayout" name="verticalLayout_27"/>
+       </item>
+       <item row="3" column="0">
+        <layout class="QVBoxLayout" name="verticalLayout_28">
+         <item>
+          <widget class="QLabel" name="clientSecretLabel">
+           <property name="text">
+            <string>Client secret</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="3" column="1">
+        <layout class="QVBoxLayout" name="verticalLayout_29">
+         <item>
+          <widget class="QLineEdit" name="client_secret"/>
+         </item>
+        </layout>
+       </item>
+       <item row="3" column="2">
+        <layout class="QVBoxLayout" name="verticalLayout_30"/>
+       </item>
+       <item row="4" column="0">
+        <layout class="QVBoxLayout" name="verticalLayout_31">
+         <item>
+          <widget class="QLabel" name="hostLabel">
+           <property name="text">
+            <string>Host</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="4" column="1">
+        <layout class="QVBoxLayout" name="verticalLayout_32">
+         <item>
+          <widget class="QLineEdit" name="host"/>
+         </item>
+        </layout>
+       </item>
+       <item row="4" column="2">
+        <layout class="QVBoxLayout" name="verticalLayout_33"/>
+       </item>
+       <item row="5" column="0">
+        <layout class="QVBoxLayout" name="verticalLayout_34">
+         <item>
+          <widget class="QLabel" name="imsHostLabel">
+           <property name="text">
+            <string>ims Host</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="5" column="1">
+        <layout class="QVBoxLayout" name="verticalLayout_35">
+         <item>
+          <widget class="QLineEdit" name="ims_host"/>
+         </item>
+        </layout>
+       </item>
+       <item row="5" column="2">
+        <layout class="QVBoxLayout" name="verticalLayout_36"/>
+       </item>
+       <item row="6" column="0">
+        <layout class="QVBoxLayout" name="verticalLayout_37">
+         <item>
+          <widget class="QLabel" name="privateKeyFileLabel">
+           <property name="text">
+            <string>Private Key File</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="6" column="1">
+        <layout class="QVBoxLayout" name="verticalLayout_38">
+         <item>
+          <widget class="QLineEdit" name="private_key_file"/>
+         </item>
+        </layout>
+       </item>
+       <item row="6" column="2">
+        <layout class="QVBoxLayout" name="verticalLayout_39">
+         <item>
+          <widget class="QToolButton" name="privateKeyPath">
+           <property name="text">
+            <string>...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>380</y>
+        <width>511</width>
+        <height>74</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="logon_type"/>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="id_type"/>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="idTypeLabel">
+         <property name="text">
+          <string>Id Type</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="logonTypeLabel">
+         <property name="text">
+          <string>Logon Type</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="userNameFileLabel">
+         <property name="text">
+          <string>User Name File  </string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="users_filename"/>
+       </item>
+       <item row="2" column="2">
+        <widget class="QToolButton" name="userListFilePath">
+         <property name="text">
+          <string>...</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>70</y>
         <width>511</width>
         <height>24</height>
        </rect>
@@ -70,7 +335,7 @@
          <item>
           <widget class="QLabel" name="label_3">
            <property name="text">
-            <string>Configuration File    </string>
+            <string>Configuration File Path    </string>
            </property>
           </widget>
          </item>
@@ -99,9 +364,9 @@
      <widget class="QLabel" name="message">
       <property name="geometry">
        <rect>
-        <x>100</x>
-        <y>20</y>
-        <width>401</width>
+        <x>10</x>
+        <y>13</y>
+        <width>541</width>
         <height>21</height>
        </rect>
       </property>
@@ -109,258 +374,34 @@
        <string/>
       </property>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QLabel" name="label_4">
       <property name="geometry">
        <rect>
-        <x>60</x>
-        <y>100</y>
-        <width>511</width>
-        <height>216</height>
+        <x>10</x>
+        <y>40</y>
+        <width>541</width>
+        <height>21</height>
        </rect>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_9">
-       <item>
-        <widget class="QLabel" name="label">
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>UMAPI Configurations</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QGridLayout" name="gridLayout_2">
-         <item row="0" column="0">
-          <layout class="QVBoxLayout" name="verticalLayout">
-           <item>
-            <widget class="QLabel" name="organizationIDLabel">
-             <property name="text">
-              <string>Organization ID</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="0" column="1">
-          <layout class="QVBoxLayout" name="verticalLayout_2">
-           <item>
-            <widget class="QLineEdit" name="org_id"/>
-           </item>
-          </layout>
-         </item>
-         <item row="0" column="2">
-          <layout class="QVBoxLayout" name="verticalLayout_3"/>
-         </item>
-         <item row="1" column="0">
-          <layout class="QVBoxLayout" name="verticalLayout_4">
-           <item>
-            <widget class="QLabel" name="technicalAccountIDLabel">
-             <property name="text">
-              <string>Technical account ID</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="1" column="1">
-          <layout class="QVBoxLayout" name="verticalLayout_5">
-           <item>
-            <widget class="QLineEdit" name="tech_acct_id"/>
-           </item>
-          </layout>
-         </item>
-         <item row="1" column="2">
-          <layout class="QVBoxLayout" name="verticalLayout_6"/>
-         </item>
-         <item row="2" column="0">
-          <layout class="QVBoxLayout" name="verticalLayout_25">
-           <item>
-            <widget class="QLabel" name="aPIKeyClientIDLabel">
-             <property name="text">
-              <string>API Key (Client ID)</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="2" column="1">
-          <layout class="QVBoxLayout" name="verticalLayout_26">
-           <item>
-            <widget class="QLineEdit" name="api_key"/>
-           </item>
-          </layout>
-         </item>
-         <item row="2" column="2">
-          <layout class="QVBoxLayout" name="verticalLayout_27"/>
-         </item>
-         <item row="3" column="0">
-          <layout class="QVBoxLayout" name="verticalLayout_28">
-           <item>
-            <widget class="QLabel" name="clientSecretLabel">
-             <property name="text">
-              <string>Client secret</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="3" column="1">
-          <layout class="QVBoxLayout" name="verticalLayout_29">
-           <item>
-            <widget class="QLineEdit" name="client_secret"/>
-           </item>
-          </layout>
-         </item>
-         <item row="3" column="2">
-          <layout class="QVBoxLayout" name="verticalLayout_30"/>
-         </item>
-         <item row="4" column="0">
-          <layout class="QVBoxLayout" name="verticalLayout_31">
-           <item>
-            <widget class="QLabel" name="hostLabel">
-             <property name="text">
-              <string>Host</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="4" column="1">
-          <layout class="QVBoxLayout" name="verticalLayout_32">
-           <item>
-            <widget class="QLineEdit" name="host"/>
-           </item>
-          </layout>
-         </item>
-         <item row="4" column="2">
-          <layout class="QVBoxLayout" name="verticalLayout_33"/>
-         </item>
-         <item row="5" column="0">
-          <layout class="QVBoxLayout" name="verticalLayout_34">
-           <item>
-            <widget class="QLabel" name="imsHostLabel">
-             <property name="text">
-              <string>ims Host</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="5" column="1">
-          <layout class="QVBoxLayout" name="verticalLayout_35">
-           <item>
-            <widget class="QLineEdit" name="ims_host"/>
-           </item>
-          </layout>
-         </item>
-         <item row="5" column="2">
-          <layout class="QVBoxLayout" name="verticalLayout_36"/>
-         </item>
-         <item row="6" column="0">
-          <layout class="QVBoxLayout" name="verticalLayout_37">
-           <item>
-            <widget class="QLabel" name="privateKeyFileLabel">
-             <property name="text">
-              <string>Private Key File</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="6" column="1">
-          <layout class="QVBoxLayout" name="verticalLayout_38">
-           <item>
-            <widget class="QLineEdit" name="private_key_file"/>
-           </item>
-          </layout>
-         </item>
-         <item row="6" column="2">
-          <layout class="QVBoxLayout" name="verticalLayout_39">
-           <item>
-            <widget class="QToolButton" name="privateKeyPath">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="">
-      <property name="geometry">
-       <rect>
-        <x>60</x>
-        <y>330</y>
-        <width>511</width>
-        <height>98</height>
-       </rect>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_10">
-       <item>
-        <widget class="QLabel" name="label_2">
-         <property name="font">
-          <font>
-           <pointsize>10</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>User Configurations</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QGridLayout" name="gridLayout">
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="logon_type"/>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="id_type"/>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="idTypeLabel">
-           <property name="text">
-            <string>Id Type</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="logonTypeLabel">
-           <property name="text">
-            <string>Logon Type</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="userNameFileLabel">
-           <property name="text">
-            <string>User Name File  </string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLineEdit" name="users_filename"/>
-         </item>
-         <item row="2" column="2">
-          <widget class="QToolButton" name="userListFilePath">
-           <property name="text">
-            <string>...</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
+      <property name="text">
+       <string> Configuration File</string>
+      </property>
      </widget>
+     <zorder>label</zorder>
+     <zorder>save</zorder>
+     <zorder>layoutWidget</zorder>
+     <zorder>layoutWidget</zorder>
+     <zorder>layoutWidget</zorder>
+     <zorder>message</zorder>
+     <zorder>label_2</zorder>
+     <zorder>label_4</zorder>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
@@ -374,7 +415,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>681</width>
+     <width>570</width>
      <height>21</height>
     </rect>
    </property>

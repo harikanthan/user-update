@@ -1,10 +1,13 @@
+from builtins import print
+
 from PySide2 import QtCore, QtGui, QtWidgets
 from ui.ui_main_window_base import Ui_MainWindowBase
 import config.config_loader as config_loader
 from PySide2.QtWidgets import QFileDialog
 import yaml
 from PySide2.QtCore import QObject
-import sys
+import sys, os
+from pathlib import Path
 
 class Ui_MainWindow(Ui_MainWindowBase):
 
@@ -15,19 +18,35 @@ class Ui_MainWindow(Ui_MainWindowBase):
         self.userListFilePath.clicked.connect(lambda:self.__setFilePath(self.users_filename, "*.csv"))
 
     def __loadConfig(self, field: QtWidgets.QLineEdit, fileType):
+        self.message.setText("")
+        self.message.setStyleSheet('background-color : #fff;')
         self.__setFilePath(field, fileType)
         if field.text():
             field.setText(field.text())
             self.setDefaultValues(field.text())
 
     def __setFilePath(self, field: QtWidgets.QLineEdit, fileType):
-        path_to_file, _ = QFileDialog.getOpenFileName(None,"Load File Path",None,fileType,None)
+        directoryPath = Path(__file__).parents[2]
+        path_to_file, _ = QFileDialog.getOpenFileName(None,"Load File Path",directoryPath.__str__(),fileType,None)
         field.setText(path_to_file)
 
 
     def __save(self):
-        if self.config_File_name.text() is not None:
-            config = yaml.load(open(self.config_File_name.text()))
+        fileName = None
+        if self.config_File_name.text() is not None and  not self.config_File_name:
+            fileName = self.config_File_name.text()
+            config = yaml.load(open(fileName))
+        else:
+            parentPath = Path(__file__).parents[2]
+            fileName = parentPath.__str__()+'/user-config.yml'
+            self.config_File_name.setText(fileName)
+            data = dict(
+                configuration=dict(),
+                umapi = dict()
+            )
+            yaml.dump(data, open(fileName, "w+"), default_flow_style=False)
+            config = yaml.load(open(fileName))
+
 
         umapi = config["umapi"]
         umapi["org_id"] = self.org_id.text()
@@ -43,7 +62,7 @@ class Ui_MainWindow(Ui_MainWindowBase):
         configuration["logon_type"] = self.logon_type.text()
         configuration["username_file"] = self.users_filename.text()
 
-        yaml.dump(config, open("../example-config.yml", "w"), default_flow_style=False)
+        yaml.dump(config, open(fileName, "w"), default_flow_style=False)
 
     def setDefaultValues(self, configFile):
         try:
@@ -59,17 +78,20 @@ class Ui_MainWindow(Ui_MainWindowBase):
             self.logon_type.setText(config.logon_type)
             self.users_filename.setText(config.users_filename)
         except TypeError:
-            self.message.setText("Invalid config file")
-            self.message.setStyleSheet('color: red')
+            self.message.setText("  Error: Invalid config file")
+            self.message.setStyleSheet('background-color : #f8d7da; color : #E60000; ')
 
 if __name__ == "__main__":
 
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    MainWindow.setFixedSize(674, 550)
+    MainWindow.setFixedSize(590, 561)
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
+    ui.label.setStyleSheet('background-color : #838383; color : #fff;')
+    ui.label_2.setStyleSheet('background-color : #838383; color : #fff;')
+    ui.label_4.setStyleSheet('background-color : #838383; color : #fff;')
     ui.update_window_config()
-
     MainWindow.show()
     sys.exit(app.exec_())
+
