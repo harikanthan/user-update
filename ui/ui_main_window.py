@@ -22,7 +22,6 @@ class Ui_MainWindow(Ui_MainWindowBase):
         self.message.setStyleSheet('background-color : #fff;')
         self.__setFilePath(field, fileType)
         if field.text():
-            field.setText(field.text())
             self.setDefaultValues(field.text())
 
     def __setFilePath(self, field: QtWidgets.QLineEdit, fileType):
@@ -32,13 +31,12 @@ class Ui_MainWindow(Ui_MainWindowBase):
 
 
     def __save(self):
-        fileName = None
         if self.config_File_name.text() is not None and  not self.config_File_name:
             fileName = self.config_File_name.text()
             config = yaml.load(open(fileName))
         else:
             parentPath = Path(__file__).parents[2]
-            fileName = parentPath.__str__()+'/user-config.yml'
+            fileName = parentPath.__str__()+'/config.yml'
             self.config_File_name.setText(fileName)
             data = dict(
                 configuration=dict(),
