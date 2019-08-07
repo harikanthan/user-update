@@ -121,7 +121,9 @@ class Ui_MainWindow(Ui_MainWindowBase):
         self.message.setStyleSheet(style)
 
     def __run_user_update(self):
-        print('run')
+        command = 'python ../user_update.py -c ' +  self.config_File_name_readOnly.text()
+        exit_code= os.system(command)
+        return exit_code
 
 
 if __name__ == "__main__":
