@@ -7,9 +7,12 @@ from PySide2.QtWidgets import QFileDialog
 import yaml
 from PySide2.QtCore import QObject
 import sys, os
+from os import path
 from pathlib import Path
 
 class Ui_MainWindow(Ui_MainWindowBase):
+    ERROR_MESSAGE_STYLE = 'background-color : #f8d7da; color : #E60000; '
+    SUCCESS_MESSAGE_STYLE = 'background-color : #dff0d8; color : #126931; '
 
     def update_window_config(self):
         self.configFilePath.clicked.connect(lambda: self.__loadConfig(self.config_File_name, "*.yml"))
@@ -18,11 +21,14 @@ class Ui_MainWindow(Ui_MainWindowBase):
         self.userListFilePath.clicked.connect(lambda:self.__setFilePath(self.users_filename, "*.csv"))
 
     def __loadConfig(self, field: QtWidgets.QLineEdit, fileType):
+        self.clear_message()
+        self.__setFilePath(field, fileType)
+        if field.text() and (path.exists(field.text()) and os.path.getsize(field.text()) > 0):
+            self.setDefaultValues(field.text())
+
+    def clear_message(self):
         self.message.setText("")
         self.message.setStyleSheet('background-color : #fff;')
-        self.__setFilePath(field, fileType)
-        if field.text():
-            self.setDefaultValues(field.text())
 
     def __setFilePath(self, field: QtWidgets.QLineEdit, fileType):
         directoryPath = Path(__file__).parents[2]
@@ -31,36 +37,50 @@ class Ui_MainWindow(Ui_MainWindowBase):
 
 
     def __save(self):
-        if self.config_File_name.text() is not None and  not self.config_File_name:
-            fileName = self.config_File_name.text()
-            config = yaml.load(open(fileName))
-        else:
+        self.clear_message()
+        fileName = self.config_File_name.text()
+        is_create_new_file = fileName is None or not fileName
+        is_create_new_file = is_create_new_file or not path.exists(fileName)
+        is_create_new_file = is_create_new_file or  (path.exists(fileName) and os.path.getsize(fileName) == 0)
+
+        if fileName is None or not fileName:
             parentPath = Path(__file__).parents[2]
-            fileName = parentPath.__str__()+'/config.yml'
+            fileName = parentPath.__str__() + '/config.yml'
+
+        if is_create_new_file:
             self.config_File_name.setText(fileName)
-            data = dict(
-                configuration=dict(),
-                umapi = dict()
-            )
-            yaml.dump(data, open(fileName, "w+"), default_flow_style=False)
+            config = self.create_new_config(fileName)
+        else:
             config = yaml.load(open(fileName))
 
+        try:
+            umapi = config["umapi"]
+            umapi["org_id"] = self.org_id.text()
+            umapi["tech_acct_id"] = self.tech_acct_id.text()
+            umapi["api_key"] = self.api_key.text()
+            umapi["client_secret"] = self.client_secret.text()
+            umapi["private_key_file"] = self.private_key_file.text()
+            umapi["host"] = self.host.text()
+            umapi["ims_host"] = self.ims_host.text()
 
-        umapi = config["umapi"]
-        umapi["org_id"] = self.org_id.text()
-        umapi["tech_acct_id"] = self.tech_acct_id.text()
-        umapi["api_key"] = self.api_key.text()
-        umapi["client_secret"] = self.client_secret.text()
-        umapi["private_key_file"] = self.private_key_file.text()
-        umapi["host"] = self.host.text()
-        umapi["ims_host"] = self.ims_host.text()
+            configuration = config["configuration"]
+            configuration["id_type"] = self.id_type.text()
+            configuration["logon_type"] = self.logon_type.text()
+            configuration["username_file"] = self.users_filename.text()
 
-        configuration = config["configuration"]
-        configuration["id_type"] = self.id_type.text()
-        configuration["logon_type"] = self.logon_type.text()
-        configuration["username_file"] = self.users_filename.text()
+            yaml.dump(config, open(fileName, "w"), default_flow_style=False)
+            self.set_message("  Configuration file updated.", self.SUCCESS_MESSAGE_STYLE)
+        except TypeError:
+            self.set_message("  Error: Cannot update file. Invalid config file",self.ERROR_MESSAGE_STYLE)
 
-        yaml.dump(config, open(fileName, "w"), default_flow_style=False)
+    def create_new_config(self, fileName):
+        data = dict(
+            configuration=dict(),
+            umapi=dict()
+        )
+        yaml.dump(data, open(fileName, "w+"), default_flow_style=False)
+        config = yaml.load(open(fileName))
+        return config
 
     def setDefaultValues(self, configFile):
         try:
@@ -76,8 +96,12 @@ class Ui_MainWindow(Ui_MainWindowBase):
             self.logon_type.setText(config.logon_type)
             self.users_filename.setText(config.users_filename)
         except TypeError:
-            self.message.setText("  Error: Invalid config file")
-            self.message.setStyleSheet('background-color : #f8d7da; color : #E60000; ')
+            self.set_message("  Error: Unable to load configuration. Invalid config file",self.ERROR_MESSAGE_STYLE)
+
+    def set_message(self, message_string, style):
+        self.message.setText(message_string)
+        self.message.setStyleSheet(style)
+
 
 if __name__ == "__main__":
 
