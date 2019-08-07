@@ -38,15 +38,15 @@ class Ui_MainWindow(Ui_MainWindowBase):
         self.label_4.setStyleSheet(self.GREY_CARD_TILE)
 
     def __loadConfig(self, field: QtWidgets.QLineEdit, fileType):
-        self.__clear_message()
+        self.__clear_message(self.message)
         self.__setFilePath(field, fileType)
         self.config_File_name_readOnly.setText(self.config_File_name.text())
         if field.text() and (path.exists(field.text()) and os.path.getsize(field.text()) > 0):
             self.__setDefaultValues(field.text())
 
-    def __clear_message(self):
-        self.message.setText("")
-        self.message.setStyleSheet(self.WHITE_BACKGROUND)
+    def __clear_message(self, label: QtWidgets.QLabel):
+        label.setText("")
+        label.setStyleSheet(self.WHITE_BACKGROUND)
 
     def __setFilePath(self, field: QtWidgets.QLineEdit, fileType):
         directoryPath = Path(__file__).parents[2]
@@ -54,7 +54,7 @@ class Ui_MainWindow(Ui_MainWindowBase):
         field.setText(path_to_file)
 
     def __save(self):
-        self.__clear_message()
+        self.__clear_message(self.message)
         fileName = self.config_File_name.text()
         is_create_new_file = fileName is None or not fileName
         is_create_new_file = is_create_new_file or not path.exists(fileName)
@@ -87,9 +87,10 @@ class Ui_MainWindow(Ui_MainWindowBase):
 
             yaml.dump(config, open(fileName, "w"), default_flow_style=False)
             self.config_File_name_readOnly.setText(self.config_File_name.text())
-            self.__set_message("  Configuration file updated.", self.SUCCESS_MESSAGE_STYLE)
+            self.__set_message(self.message, "  Configuration file updated.", self.SUCCESS_MESSAGE_STYLE)
         except TypeError:
-            self.__set_message("  Error: Cannot update file. Invalid config file", self.ERROR_MESSAGE_STYLE)
+            self.__set_message(self.message, "  Error: Cannot update file. Invalid config file",
+                               self.ERROR_MESSAGE_STYLE)
 
     def __create_new_config(self, fileName):
         data = dict(
@@ -114,26 +115,33 @@ class Ui_MainWindow(Ui_MainWindowBase):
             self.logon_type.setText(config.logon_type)
             self.users_filename.setText(config.users_filename)
         except TypeError:
-            self.__set_message("  Error: Unable to load configuration. Invalid config file", self.ERROR_MESSAGE_STYLE)
+            self.__set_message(self.message, "  Error: Unable to load configuration. Invalid config file",
+                               self.ERROR_MESSAGE_STYLE)
 
-    def __set_message(self, message_string, style):
-        self.message.setText(message_string)
-        self.message.setStyleSheet(style)
+    def __set_message(self, label: QtWidgets.QLabel, message_string, style):
+        label.setText(message_string)
+        label.setStyleSheet(style)
 
     def __run_user_update(self):
         command = 'python ../user_update.py -c ' + self.config_File_name_readOnly.text()
         proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
         console_log = proc.communicate()[0]
+        self.console_log.setText(console_log.decode())
+
         if proc.returncode == 0:
-            print("sucess")
+            self.__set_message(self.message_UpdUser_tab,
+                               "  User update executed sucessfully. Check run logs for success/failure statistics",
+                               self.SUCCESS_MESSAGE_STYLE)
         else:
-            print("fail")
+            self.__set_message(self.message_UpdUser_tab,
+                               "  Failed to execute user update. Check run logs for more info ",
+                               self.ERROR_MESSAGE_STYLE)
 
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    MainWindow.setFixedSize(590, 561)
+    MainWindow.setFixedSize(585, 628)
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
 
