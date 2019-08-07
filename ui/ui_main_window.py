@@ -1,14 +1,15 @@
-from builtins import print
-
-from PySide2 import QtCore, QtGui, QtWidgets
-from ui.ui_main_window_base import Ui_MainWindowBase
-import config.config_loader as config_loader
-from PySide2.QtWidgets import QFileDialog
-import yaml
-from PySide2.QtCore import QObject
-import sys, os
+import os
+import sys
 from os import path
 from pathlib import Path
+
+import yaml
+from PySide2 import QtWidgets
+from PySide2.QtWidgets import QFileDialog
+
+import config.config_loader as config_loader
+from ui.ui_main_window_base import Ui_MainWindowBase
+
 
 class Ui_MainWindow(Ui_MainWindowBase):
     ERROR_MESSAGE_STYLE = 'background-color : #f8d7da; color : #E60000; '
@@ -17,8 +18,8 @@ class Ui_MainWindow(Ui_MainWindowBase):
     def update_window_config(self):
         self.configFilePath.clicked.connect(lambda: self.__loadConfig(self.config_File_name, "*.yml"))
         self.save.clicked.connect(self.__save)
-        self.privateKeyPath.clicked.connect(lambda:self.__setFilePath(self.private_key_file, "*.key"))
-        self.userListFilePath.clicked.connect(lambda:self.__setFilePath(self.users_filename, "*.csv"))
+        self.privateKeyPath.clicked.connect(lambda: self.__setFilePath(self.private_key_file, "*.key"))
+        self.userListFilePath.clicked.connect(lambda: self.__setFilePath(self.users_filename, "*.csv"))
 
     def __loadConfig(self, field: QtWidgets.QLineEdit, fileType):
         self.clear_message()
@@ -32,20 +33,19 @@ class Ui_MainWindow(Ui_MainWindowBase):
 
     def __setFilePath(self, field: QtWidgets.QLineEdit, fileType):
         directoryPath = Path(__file__).parents[2]
-        path_to_file, _ = QFileDialog.getOpenFileName(None,"Load File Path",directoryPath.__str__(),fileType,None)
+        path_to_file, _ = QFileDialog.getOpenFileName(None, "Load File Path", directoryPath.__str__(), fileType, None)
         field.setText(path_to_file)
-
 
     def __save(self):
         self.clear_message()
         fileName = self.config_File_name.text()
         is_create_new_file = fileName is None or not fileName
         is_create_new_file = is_create_new_file or not path.exists(fileName)
-        is_create_new_file = is_create_new_file or  (path.exists(fileName) and os.path.getsize(fileName) == 0)
+        is_create_new_file = is_create_new_file or (path.exists(fileName) and os.path.getsize(fileName) == 0)
 
         if fileName is None or not fileName:
             parentPath = Path(__file__).parents[2]
-            fileName = parentPath.__str__() + '/config.yml'
+            fileName = path.join(parentPath.__str__(), 'config.yml')
 
         if is_create_new_file:
             self.config_File_name.setText(fileName)
@@ -71,7 +71,7 @@ class Ui_MainWindow(Ui_MainWindowBase):
             yaml.dump(config, open(fileName, "w"), default_flow_style=False)
             self.set_message("  Configuration file updated.", self.SUCCESS_MESSAGE_STYLE)
         except TypeError:
-            self.set_message("  Error: Cannot update file. Invalid config file",self.ERROR_MESSAGE_STYLE)
+            self.set_message("  Error: Cannot update file. Invalid config file", self.ERROR_MESSAGE_STYLE)
 
     def create_new_config(self, fileName):
         data = dict(
@@ -96,7 +96,7 @@ class Ui_MainWindow(Ui_MainWindowBase):
             self.logon_type.setText(config.logon_type)
             self.users_filename.setText(config.users_filename)
         except TypeError:
-            self.set_message("  Error: Unable to load configuration. Invalid config file",self.ERROR_MESSAGE_STYLE)
+            self.set_message("  Error: Unable to load configuration. Invalid config file", self.ERROR_MESSAGE_STYLE)
 
     def set_message(self, message_string, style):
         self.message.setText(message_string)
@@ -104,7 +104,6 @@ class Ui_MainWindow(Ui_MainWindowBase):
 
 
 if __name__ == "__main__":
-
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     MainWindow.setFixedSize(590, 561)
@@ -116,4 +115,3 @@ if __name__ == "__main__":
     ui.update_window_config()
     MainWindow.show()
     sys.exit(app.exec_())
-
