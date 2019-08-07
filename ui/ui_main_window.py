@@ -16,7 +16,7 @@ import subprocess
 class Ui_MainWindow(Ui_MainWindowBase):
     ERROR_MESSAGE_STYLE = 'background-color : #f8d7da; color : #E60000; '
     SUCCESS_MESSAGE_STYLE = 'background-color : #dff0d8; color : #126931; '
-    GREY_CARD_TILE= 'background-color : #838383; color : #fff;'
+    GREY_CARD_TILE = 'background-color : #838383; color : #fff;'
     WHITE_BACKGROUND = 'background-color : #fff;'
 
     def update_window_config(self):
@@ -121,9 +121,13 @@ class Ui_MainWindow(Ui_MainWindowBase):
         self.message.setStyleSheet(style)
 
     def __run_user_update(self):
-        command = 'python ../user_update.py -c ' +  self.config_File_name_readOnly.text()
-        exit_code= os.system(command)
-        return exit_code
+        command = 'python ../user_update.py -c ' + self.config_File_name_readOnly.text()
+        proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+        console_log = proc.communicate()[0]
+        if proc.returncode == 0:
+            print("sucess")
+        else:
+            print("fail")
 
 
 if __name__ == "__main__":
