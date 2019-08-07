@@ -16,6 +16,8 @@ import subprocess
 class Ui_MainWindow(Ui_MainWindowBase):
     ERROR_MESSAGE_STYLE = 'background-color : #f8d7da; color : #E60000; '
     SUCCESS_MESSAGE_STYLE = 'background-color : #dff0d8; color : #126931; '
+    GREY_CARD_TILE= 'background-color : #838383; color : #fff;'
+    WHITE_BACKGROUND = 'background-color : #fff;'
 
     def update_window_config(self):
         self.configFilePath.clicked.connect(lambda: self.__loadConfig(self.config_File_name, "*.yml"))
@@ -28,8 +30,12 @@ class Ui_MainWindow(Ui_MainWindowBase):
         self.grey = QPalette()
         self.grey.setColor(QPalette.Base, Qt.lightGray)
         self.grey.setColor(QPalette.Text, Qt.black)
-
         self.config_File_name_readOnly.setPalette(self.grey)
+
+        # Rename label_x
+        self.label.setStyleSheet(self.GREY_CARD_TILE)
+        self.label_2.setStyleSheet(self.GREY_CARD_TILE)
+        self.label_4.setStyleSheet(self.GREY_CARD_TILE)
 
     def __loadConfig(self, field: QtWidgets.QLineEdit, fileType):
         self.__clear_message()
@@ -40,7 +46,7 @@ class Ui_MainWindow(Ui_MainWindowBase):
 
     def __clear_message(self):
         self.message.setText("")
-        self.message.setStyleSheet('background-color : #fff;')
+        self.message.setStyleSheet(self.WHITE_BACKGROUND)
 
     def __setFilePath(self, field: QtWidgets.QLineEdit, fileType):
         directoryPath = Path(__file__).parents[2]
@@ -124,9 +130,7 @@ if __name__ == "__main__":
     MainWindow.setFixedSize(590, 561)
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
-    ui.label.setStyleSheet('background-color : #838383; color : #fff;')
-    ui.label_2.setStyleSheet('background-color : #838383; color : #fff;')
-    ui.label_4.setStyleSheet('background-color : #838383; color : #fff;')
+
     ui.update_window_config()
     MainWindow.show()
     sys.exit(app.exec_())
