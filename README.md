@@ -12,7 +12,7 @@ Run user_update.py with below options to update the User Profile details in admi
 
 ### Files Required
 
-1) xxxx-config.yml
+1) config.yml
 
 ```properties
 umapi:
@@ -31,3 +31,11 @@ configuration:
 A csv file containg Username,Email,New Email,New Username, First Name,Last Name,Country Code
 
 3) private.key
+
+### QT Designer
+
+1) ui_main_window_base.ui is the configuration file for designing the form in QT Designer
+2) To generate ui_main_window_base.py, use the below command
+```pyuic5 ui_main_window_base.ui -o ui_main_window_base.py```
+3) ui_main_window_base.ui (in resource folder) is generated file and no changes should be made directly to this file
+4) The generated  ui_main_window_base.py uses PyQt5, we can replace that with PySide2 and use the remaining file without any change

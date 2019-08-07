@@ -6,9 +6,11 @@ from pathlib import Path
 import yaml
 from PySide2 import QtWidgets
 from PySide2.QtWidgets import QFileDialog
-
+from PySide2.QtGui import QPalette
 import config.config_loader as config_loader
 from ui.ui_main_window_base import Ui_MainWindowBase
+from PySide2.QtCore import Qt
+import subprocess
 
 
 class Ui_MainWindow(Ui_MainWindowBase):
@@ -20,14 +22,23 @@ class Ui_MainWindow(Ui_MainWindowBase):
         self.save.clicked.connect(self.__save)
         self.privateKeyPath.clicked.connect(lambda: self.__setFilePath(self.private_key_file, "*.key"))
         self.userListFilePath.clicked.connect(lambda: self.__setFilePath(self.users_filename, "*.csv"))
+        self.run_user_update.clicked.connect(self.__run_user_update)
+
+        self.config_File_name_readOnly.setReadOnly(True)
+        self.grey = QPalette()
+        self.grey.setColor(QPalette.Base, Qt.lightGray)
+        self.grey.setColor(QPalette.Text, Qt.black)
+
+        self.config_File_name_readOnly.setPalette(self.grey)
 
     def __loadConfig(self, field: QtWidgets.QLineEdit, fileType):
-        self.clear_message()
+        self.__clear_message()
         self.__setFilePath(field, fileType)
+        self.config_File_name_readOnly.setText(self.config_File_name.text())
         if field.text() and (path.exists(field.text()) and os.path.getsize(field.text()) > 0):
-            self.setDefaultValues(field.text())
+            self.__setDefaultValues(field.text())
 
-    def clear_message(self):
+    def __clear_message(self):
         self.message.setText("")
         self.message.setStyleSheet('background-color : #fff;')
 
@@ -37,7 +48,7 @@ class Ui_MainWindow(Ui_MainWindowBase):
         field.setText(path_to_file)
 
     def __save(self):
-        self.clear_message()
+        self.__clear_message()
         fileName = self.config_File_name.text()
         is_create_new_file = fileName is None or not fileName
         is_create_new_file = is_create_new_file or not path.exists(fileName)
@@ -49,7 +60,7 @@ class Ui_MainWindow(Ui_MainWindowBase):
 
         if is_create_new_file:
             self.config_File_name.setText(fileName)
-            config = self.create_new_config(fileName)
+            config = self.__create_new_config(fileName)
         else:
             config = yaml.load(open(fileName))
 
@@ -69,11 +80,12 @@ class Ui_MainWindow(Ui_MainWindowBase):
             configuration["username_file"] = self.users_filename.text()
 
             yaml.dump(config, open(fileName, "w"), default_flow_style=False)
-            self.set_message("  Configuration file updated.", self.SUCCESS_MESSAGE_STYLE)
+            self.config_File_name_readOnly.setText(self.config_File_name.text())
+            self.__set_message("  Configuration file updated.", self.SUCCESS_MESSAGE_STYLE)
         except TypeError:
-            self.set_message("  Error: Cannot update file. Invalid config file", self.ERROR_MESSAGE_STYLE)
+            self.__set_message("  Error: Cannot update file. Invalid config file", self.ERROR_MESSAGE_STYLE)
 
-    def create_new_config(self, fileName):
+    def __create_new_config(self, fileName):
         data = dict(
             configuration=dict(),
             umapi=dict()
@@ -82,7 +94,7 @@ class Ui_MainWindow(Ui_MainWindowBase):
         config = yaml.load(open(fileName))
         return config
 
-    def setDefaultValues(self, configFile):
+    def __setDefaultValues(self, configFile):
         try:
             umapi, config = config_loader.ConfigLoader().load_config(config_filename=configFile)
             self.org_id.setText(umapi.org_id)
@@ -96,11 +108,14 @@ class Ui_MainWindow(Ui_MainWindowBase):
             self.logon_type.setText(config.logon_type)
             self.users_filename.setText(config.users_filename)
         except TypeError:
-            self.set_message("  Error: Unable to load configuration. Invalid config file", self.ERROR_MESSAGE_STYLE)
+            self.__set_message("  Error: Unable to load configuration. Invalid config file", self.ERROR_MESSAGE_STYLE)
 
-    def set_message(self, message_string, style):
+    def __set_message(self, message_string, style):
         self.message.setText(message_string)
         self.message.setStyleSheet(style)
+
+    def __run_user_update(self):
+        print('run')
 
 
 if __name__ == "__main__":
