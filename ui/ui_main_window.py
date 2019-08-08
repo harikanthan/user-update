@@ -39,6 +39,7 @@ class Ui_MainWindow(Ui_MainWindowBase):
 
     def __loadConfig(self, field: QtWidgets.QLineEdit, fileType):
         self.__clear_message(self.message)
+        self.__clear_message(self.message_UpdUser_tab)
         self.__setFilePath(field, fileType)
         self.config_File_name_readOnly.setText(self.config_File_name.text())
         if field.text() and (path.exists(field.text()) and os.path.getsize(field.text()) > 0):
@@ -55,6 +56,7 @@ class Ui_MainWindow(Ui_MainWindowBase):
 
     def __save(self):
         self.__clear_message(self.message)
+        self.__clear_message(self.message_UpdUser_tab)
         fileName = self.config_File_name.text()
         is_create_new_file = fileName is None or not fileName
         is_create_new_file = is_create_new_file or not path.exists(fileName)
@@ -92,6 +94,7 @@ class Ui_MainWindow(Ui_MainWindowBase):
             self.__set_message(self.message, "  Error: Cannot update file. Invalid config file",
                                self.ERROR_MESSAGE_STYLE)
 
+
     def __create_new_config(self, fileName):
         data = dict(
             configuration=dict(),
@@ -117,6 +120,7 @@ class Ui_MainWindow(Ui_MainWindowBase):
         except TypeError:
             self.__set_message(self.message, "  Error: Unable to load configuration. Invalid config file",
                                self.ERROR_MESSAGE_STYLE)
+
 
     def __set_message(self, label: QtWidgets.QLabel, message_string, style):
         label.setText(message_string)
